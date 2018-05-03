@@ -67,10 +67,27 @@ class _SavePageState extends State<SavePage> {
   Future loadData() async {
     dao = await SavedBookDao.getInstance();
     var books = await dao.loadAll();
+    await readNew();
     setState(() {
       datas.clear();
       datas.addAll(books);
       _loading = false;
+    });
+  }
+
+  Future readNew() async {
+    datas.forEach((book) async {
+      var url = Tools.baseurl + "/" + book.bookid;
+      print("readNew: " + url);
+      var resp = await get(url);
+      var doc = parse(resp.body);
+      book.newChapterName = doc
+          .querySelector("meta[property=\"og:novel:latest_chapter_name\"]")
+          .attributes["content"];
+      book.newChapterID = Tools.getChapterID(doc
+          .querySelector("meta[property=\"og:novel:latest_chapter_url\"]")
+          .attributes["content"]);
+      dao.update(book);
     });
   }
 
@@ -81,9 +98,7 @@ class _SavePageState extends State<SavePage> {
         onDismissed: (_) async {
           await dao.delete(book.bookid);
           datas.removeAt(index);
-          setState(() {
-
-          });
+          setState(() {});
         },
         key: new Key(book.toString()),
         child: new InkWell(
