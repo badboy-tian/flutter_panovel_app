@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:panovel_app/pages/BookDetailPage.dart';
 import 'package:panovel_app/pages/HomePage.dart';
 import 'package:panovel_app/pages/MePage.dart';
 import 'package:panovel_app/pages/SavePage.dart';
+import 'package:panovel_app/common.dart';
 
 void main() => runApp(new MyApp());
 
@@ -36,6 +35,16 @@ class _PaNovelState extends State<PaNovel> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    eventBus.on().listen((enevnt) {
+      if (enevnt.toString().startsWith("bottombar")) {
+        hideBottomNavBar(enevnt.toString().split(":")[1] == "true");
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return new Scaffold(
         body: new Stack(
@@ -44,7 +53,7 @@ class _PaNovelState extends State<PaNovel> {
                 offstage: _currentIndex != 0,
                 child: new TickerMode(
                   enabled: _currentIndex == 0,
-                  child: new HomePage(hideBottom: hideBottomNavBar),
+                  child: new HomePage(),
                 )),
             new Offstage(
                 offstage: _currentIndex != 1,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Tools{
   static var baseurl = "https://m.biquguan.com";
@@ -64,6 +65,26 @@ class Tools{
   }
 
   static void showSnake(BuildContext context, String msg){
-    Scaffold.of(context).showSnackBar(new SnackBar(content: new Text(msg)));
+    Fluttertoast.showToast(msg: msg);
+    //Scaffold.of(context).showSnackBar(new SnackBar(content: new Text(msg)));
   }
+
+  /*static void log(StackTrace stacktrace, Object msg){
+    String str = stacktrace.toString().split("\n")[0];
+    print("------->" + stacktrace.toString());
+    var parts = str.split('(file://');
+    var source = parts[1].split(':');
+    String method = parts[0].trim();
+    int index = method.lastIndexOf(' ');
+    method = method.substring(index);
+    String file = source[0];
+    String line = source[1];
+    DateTime dateTime = new DateTime.now();
+
+    print('--------------------------------------------------------------\n'
+          'Line: $line\t\tMethod: $method\t\tFile: file://$file\n'
+          'msg: $msg'
+          '--------------------------------------------------------------\n'
+    );
+  }*/
 }

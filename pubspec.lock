@@ -92,11 +92,25 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
+  event_bus:
+    dependency: "direct main"
+    description:
+      name: event_bus
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.1"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_logger:
+    dependency: "direct main"
+    description:
+      name: flutter_logger
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter

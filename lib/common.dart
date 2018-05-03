@@ -6,3 +6,6 @@ export 'package:http/http.dart';
 export 'package:html/parser.dart' show parse;
 export 'package:panovel_app/utils/Tools.dart';
 export 'package:panovel_app/utils/MyCustomRoute.dart';
+import 'package:event_bus/event_bus.dart';
+
+EventBus eventBus = new EventBus();

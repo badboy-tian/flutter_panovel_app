@@ -2,7 +2,9 @@
 <module type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="android" name="Android">
-      <configuration />
+      <configuration>
+        <option name="ALLOW_USER_CONFIGURATION" value="false" />
+      </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
@@ -15,6 +17,12 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttertoast/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttertoast/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttertoast/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttertoast/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttertoast/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/fluttertoast/example/build" />
       <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/path_provider/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/path_provider/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/ios/Pods/.symlinks/plugins/path_provider/build" />

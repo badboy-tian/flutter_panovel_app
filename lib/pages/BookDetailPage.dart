@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:panovel_app/bean/BkDetail.dart';
-import 'package:panovel_app/bean/BklistItem.dart';
 import 'package:panovel_app/bean/SavedBook.dart';
 import 'package:panovel_app/pages/AllChapterPage.dart';
 import 'package:panovel_app/pages/ReaderPage.dart';
@@ -13,56 +13,57 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:html2md/html2md.dart' as html2md;
 import 'package:panovel_app/bean/Chapter.dart';
+import 'package:panovel_app/common.dart';
 
 /// 书籍详细界面
 class BookDetailPage extends StatefulWidget {
-  final ValueChanged<bool> hideBottom;
-  final BklistItem bklistItem;
+  final String bookid;
 
-  BookDetailPage({this.hideBottom, this.bklistItem});
+  BookDetailPage({@required this.bookid});
 
   @override
-  _BookDetailPageState createState() =>
-      new _BookDetailPageState(hideBottom, bklistItem);
+  _BookDetailPageState createState() => new _BookDetailPageState(bookid);
 }
 
 class _BookDetailPageState extends State<BookDetailPage> {
-  final ValueChanged<bool> hideBottom;
-  final BklistItem bklistItem;
+  final String bookid;
   BkDetail _bkDetail = new BkDetail();
 
-  _BookDetailPageState(this.hideBottom, this.bklistItem) {
-    _bkDetail.img = bklistItem.img;
-    _bkDetail.name = bklistItem.title;
-    _bkDetail.author = bklistItem.author;
-  }
+  _BookDetailPageState(this.bookid);
 
   SavedBookDao dao;
+
   @override
   void initState() {
+    eventBus.fire("bottombar:true");
     super.initState();
     init();
     loadingBookDetail();
   }
 
+  SavedBook oldBook;
   Future init() async {
     dao = await SavedBookDao.getInstance();
-    _isSaved = await dao.hasBook(bklistItem.bookID);
+    oldBook = await dao.get(bookid);
     setState(() {
-      _isSaved = _isSaved;
+      _isSaved = oldBook != null;
     });
   }
 
   var _chapterID = "";
-
   void loadingBookDetail() async {
-    var url = Tools.baseurl + bklistItem.url;
+    var url = Tools.baseurl + "/" + bookid;
     print(url);
     http.get(url).then((response) {
       var doc = parser.parse(response.body);
 
       if (mounted)
         return setState(() {
+          _bkDetail.img = doc
+              .querySelector("div.synopsisArea_detail > img")
+              .attributes["src"];
+          _bkDetail.author = doc.querySelector("p.author").text;
+
           _bkDetail.readUrl = doc
               .querySelector("meta[property=\"og:url\"]")
               .attributes["content"];
@@ -70,8 +71,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
           _bkDetail.bookid = l.substring(l.lastIndexOf("/") + 1);
 
           doc.querySelector("div.directoryArea").children.forEach((element) {
-            _bkDetail.chapters.add(Chapter(_bkDetail.bookid, element.text,
-                Tools.getChapterID(element.querySelector("a").attributes["href"])));
+            _bkDetail.chapters.add(Chapter(
+                _bkDetail.bookid,
+                element.text,
+                Tools.getChapterID(
+                    element.querySelector("a").attributes["href"])));
           });
           _bkDetail.chapters.reversed;
 
@@ -108,17 +112,27 @@ class _BookDetailPageState extends State<BookDetailPage> {
           _chapterID = Tools.getChapterID(_bkDetail.newUrl);
         });
     });
+
+    if (_isSaved && oldBook != null) {
+      oldBook.lastChapterID = _chapterID;
+      oldBook.lastChapterName = _bkDetail.newName;
+      dao.update(oldBook).then((v) {
+        eventBus.fire("updateSaved");
+      });
+    }
   }
 
   bool _isSaved = false;
+  GlobalKey<ScaffoldState> key = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: new Scaffold(
+          key: key,
           appBar: new AppBar(
-            title: new Text("${bklistItem.title}"),
+            title: new Text("${_bkDetail.name}"),
             actions: <Widget>[
               new IconButton(
                   icon: new Icon(
@@ -144,27 +158,33 @@ class _BookDetailPageState extends State<BookDetailPage> {
     //print(await dao.get(_bkDetail.bookid));
     if (_isSaved) {
       await dao.delete(_bkDetail.bookid);
-      Tools.showSnake(context, "已取消收藏");
+      showMsg("已取消收藏");
       setState(() {
         _isSaved = false;
       });
     } else {
       await dao.insertOrUpdate(new SavedBook(
-          _bkDetail.name,
-          _bkDetail.img,
-          _bkDetail.author,
-          _bkDetail.bookid,
-          _bkDetail.newName,
-          Tools.getChapterID(_bkDetail.newUrl),
-          "",
-          ""));
+        _bkDetail.name,
+        _bkDetail.img,
+        _bkDetail.author,
+        _bkDetail.bookid,
+        "",
+        "",
+        _bkDetail.newName,
+        Tools.getChapterID(_bkDetail.newUrl),
+      ));
       setState(() {
         _isSaved = true;
       });
-      Tools.showSnake(context, "收藏成功");
+
+      showMsg("收藏成功");
     }
 
-    //print(await dao.get(_bkDetail.bookid));
+    eventBus.fire("updateSaved");
+  }
+
+  void showMsg(String msg) {
+    Tools.showSnake(context, msg);
   }
 
   bool _isLoading = true;
@@ -185,7 +205,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 new Image.network(
-                  bklistItem.img,
+                  _bkDetail.img,
                   width: 90.0,
                   height: 120.0,
                 ),
@@ -233,8 +253,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
                     child: new RaisedButton(
                       onPressed: () {
                         Navigator.of(context).push(new MyCustomRoute(
-                            builder: (_) => new AllChapterPage(_bkDetail.bookid,
-                                _bkDetail.name, bklistItem.url, hideBottom)));
+                            builder: (_) => new AllChapterPage(
+                                _bkDetail.bookid, _bkDetail.name)));
                       },
                       color: new Color(0xFF6AABF2),
                       textColor: Colors.white,
@@ -271,10 +291,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                               onTapUp: (_) {
                                 Navigator.of(context).push(new MyCustomRoute(
                                     builder: (_) => new AllChapterPage(
-                                        _bkDetail.bookid,
-                                        _bkDetail.name,
-                                        bklistItem.url,
-                                        hideBottom)));
+                                        _bkDetail.bookid, _bkDetail.name)));
                               },
                               child: new Text("全部章节",
                                   style: Tools.buildStyle(Colors.white, 13)))),
@@ -314,13 +331,13 @@ class _BookDetailPageState extends State<BookDetailPage> {
   }
 
   Future<bool> _onWillPop() {
-    hideBottom(false);
+    eventBus.fire("bottombar:false");
     return new Future.value(true);
   }
 
   jumpToReader(Chapter chpter) {
-    Navigator.push(context,
-        new MyCustomRoute(builder: (_) => new ReaderPage(chpter, hideBottom)));
+    Navigator.push(
+        context, new MyCustomRoute(builder: (_) => new ReaderPage(chpter)));
   }
 
   @override

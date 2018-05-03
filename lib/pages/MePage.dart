@@ -10,7 +10,7 @@ class _MePageState extends State<MePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(title: new Text("我的"),),
-      body: new Center(child: new Text("sss")),
+      body: new Center(child: new Text("敬请期待")),
     );
   }
 }

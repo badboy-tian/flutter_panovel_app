@@ -15,6 +15,8 @@ dependencies:
   sqflite: "^0.8.8"
   path_provider: '>=0.3.0'
   fluttertoast: ^2.0.3
+  flutter_logger: "^0.0.1"
+  event_bus: "^0.4.1"
 
 dev_dependencies:
   flutter_test:

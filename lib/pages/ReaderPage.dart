@@ -12,23 +12,22 @@ import 'package:panovel_app/pages/AllChapterPage.dart';
 import 'package:panovel_app/utils/MyCustomRoute.dart';
 import 'package:panovel_app/utils/Tools.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:panovel_app/common.dart';
 
 /// 阅读界面
 class ReaderPage extends StatefulWidget {
   @override
-  _ReaderPageState createState() => new _ReaderPageState(chapter, hideBottom);
+  _ReaderPageState createState() => new _ReaderPageState(chapter);
 
   final Chapter chapter;
-  final ValueChanged<bool> hideBottom;
 
-  ReaderPage(this.chapter, this.hideBottom);
+  ReaderPage(this.chapter);
 }
 
 class _ReaderPageState extends State<ReaderPage> {
   final Chapter chapter;
-  final ValueChanged<bool> hideBottom;
 
-  _ReaderPageState(this.chapter, this.hideBottom);
+  _ReaderPageState(this.chapter);
 
   @override
   void initState() {
@@ -127,8 +126,8 @@ class _ReaderPageState extends State<ReaderPage> {
                       Navigator.push(
                           context,
                           new MyCustomRoute(
-                              builder: (_) => new AllChapterPage(
-                                  chapter.bookid, "目录", dir, hideBottom)));
+                              builder: (_) =>
+                                  new AllChapterPage(chapter.bookid, "目录")));
                     },
                     child: new Text("目录")),
                 new FlatButton(
@@ -173,6 +172,7 @@ class _ReaderPageState extends State<ReaderPage> {
       setState(() {
         var root = parser.parse(resp.body);
         _title = root.querySelector("title").text;
+        chapter.name = _title;
         lasturl = root.querySelector("a#pt_prev").attributes["href"];
         nexturl = root.querySelector("a#pt_next").attributes["href"];
         dir = root.querySelector("a#pt_mulu").attributes["href"];
@@ -187,9 +187,11 @@ class _ReaderPageState extends State<ReaderPage> {
       SavedBookDao.getInstance().then((value) async {
         var old = await value.get(chapter.bookid);
         if (old != null) {
-          old.newChapterID = chapter.chapterid;
-          old.newChapterName = chapter.name;
-          value.update(old);
+          old.lastChapterID = chapter.chapterid;
+          old.lastChapterName = chapter.name;
+          value.update(old).then((value){
+            eventBus.fire("updateNewChapter");
+          });
         }
       });
     }).catchError((onError) {

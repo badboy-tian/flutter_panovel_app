@@ -1,4 +1,3 @@
-
 import 'package:panovel_app/bean/BklistItem.dart';
 import 'package:panovel_app/pages/BookDetailPage.dart';
 import 'package:panovel_app/common.dart';
@@ -67,7 +66,7 @@ class _HomeItemState extends State<HomeSubPage> {
     setState(() {
       _currentPage = 1;
     });
-    loadDatas(true);
+    await loadDatas(true);
   }
 
   @override
@@ -82,26 +81,24 @@ class _HomeItemState extends State<HomeSubPage> {
   int _currentPage = 1;
   int _totalPage = 1;
 
-  void loadDatas(bool refresh) async {
-    var itemData;
+  Future loadDatas(bool refresh) async {
     var url = "${Tools.baseurl}/bqgclass/$index/$_currentPage.html";
     print(url);
-    get(url).then((response) {
-      var html = parse(response.body);
-      itemData = html.getElementsByClassName("hot_sale");
-      _totalPage = int.parse(
-          html.getElementById("txtPage").attributes["value"].split("/")[1]);
+    var response = await get(url);
+    var html = parse(response.body);
+    var itemData = html.getElementsByClassName("hot_sale");
+    _totalPage = int.parse(
+        html.getElementById("txtPage").attributes["value"].split("/")[1]);
 
-      if (isLoadingmore) {
-        isLoadingmore = false;
+    if (isLoadingmore) {
+      isLoadingmore = false;
+    }
+    if (!mounted) return;
+    setState(() {
+      if (refresh) {
+        _datas.clear();
       }
-      if (!mounted) return;
-      setState(() {
-        if (refresh) {
-          _datas.clear();
-        }
-        _datas.addAll(BklistItem.parse(itemData));
-      });
+      _datas.addAll(BklistItem.parse(itemData));
     });
   }
 
@@ -116,8 +113,7 @@ class _HomeItemState extends State<HomeSubPage> {
           Navigator.push(
               context,
               new MyCustomRoute(
-                  builder: (_) => new BookDetailPage(
-                      hideBottom: hideBottom, bklistItem: item)));
+                  builder: (_) => new BookDetailPage(bookid: item.bookID)));
         },
         child: new Container(
           child: new Row(

@@ -9,13 +9,11 @@ import 'package:panovel_app/utils/Tools.dart';
 
 class AllChapterPage extends StatefulWidget {
   final String name;
-  final String chapterid;
-  final ValueChanged<bool> hideBottom;
   final String bookid;
-  AllChapterPage(this.bookid, this.name, this.chapterid, this.hideBottom);
+  AllChapterPage(this.bookid, this.name);
 
   @override
-  _AllChapterPageState createState() => new _AllChapterPageState(this.bookid, this.name, this.chapterid, this.hideBottom);
+  _AllChapterPageState createState() => new _AllChapterPageState(this.bookid, this.name);
 }
 
 class _AllChapterPageState extends State<AllChapterPage> {
@@ -23,10 +21,8 @@ class _AllChapterPageState extends State<AllChapterPage> {
   var _scrollController = ScrollController();
   var _datas = <Chapter>[];
   final String name;
-  final String chapterid;
-  final ValueChanged<bool> hideBottom;
   final String bookid;
-  _AllChapterPageState(this.bookid, this.name, this.chapterid, this.hideBottom);
+  _AllChapterPageState(this.bookid, this.name);
 
   @override
   void initState() {
@@ -86,14 +82,14 @@ class _AllChapterPageState extends State<AllChapterPage> {
                     new BorderSide(color: Tools.lineColor, width: 0.5))),
           )),
       onTap: () {
-        Navigator.push(context, new MyCustomRoute(builder: (_)=> new ReaderPage(new Chapter(bookid, item.name, item.chapterid), hideBottom)));
+        Navigator.push(context, new MyCustomRoute(builder: (_)=> new ReaderPage(new Chapter(bookid, item.name, item.chapterid))));
         print(index);
       },
     );
   }
 
   void loadData() async {
-    var url = Tools.baseurl + this.chapterid + "/all.html";
+    var url = Tools.baseurl + "/" +  this.bookid + "/all.html";
     print(url);
     http.get(url).then((resp) {
       var root =  parser.parse(resp.body);
