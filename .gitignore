@@ -7,3 +7,7 @@
 build/
 
 .flutter-plugins
+/android/key.properties
+.idea/
+gen/
+ios/Frameworks/

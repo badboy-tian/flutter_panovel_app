@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage>
               primaryColor: Colors.green, indicatorColor: Colors.white),
           home: new Scaffold(
               appBar: new AppBar(
-                title: isSearch ? buildSearchView() : new Text("爬小说"),
+                title: isSearch ? buildSearchView() : new Text("抓小说"),
                 bottom: new TabBar(
                   isScrollable: true,
                   controller: tabController,
@@ -93,6 +93,8 @@ class _HomePageState extends State<HomePage>
         ));
   }
 
+  int preClicked = 0;
+
   Future<bool> _requestPop() {
     if (isSearch) {
       setState(() {
@@ -101,6 +103,13 @@ class _HomePageState extends State<HomePage>
       });
       return new Future.value(false);
     }
+
+    /*print("${DateTime.now().millisecond}---${preClicked}");
+    if (DateTime.now().millisecond - preClicked > 2) {
+      Tools.showSnake(context, "再次点击退出");
+      preClicked = DateTime.now().millisecond;
+      return new Future.value(false);
+    }*/
 
     return new Future.value(true);
   }
@@ -171,8 +180,7 @@ class _HomePageState extends State<HomePage>
         Navigator.push(
             context,
             new MyCustomRoute(
-                builder: (_) =>
-                    new SearchResultPage(words: text)));
+                builder: (_) => new SearchResultPage(words: text)));
       },
       onChanged: (text) {
         setState(() {});

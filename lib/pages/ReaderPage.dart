@@ -34,7 +34,7 @@ class _ReaderPageState extends State<ReaderPage> {
     super.initState();
     _title = chapter.name;
     //监听滑动
-    _controller.addListener(() {
+    /*_controller.addListener(() {
       if (_controller.position.userScrollDirection == ScrollDirection.reverse) {
         setState(() {
           _lvVisable = true;
@@ -45,7 +45,7 @@ class _ReaderPageState extends State<ReaderPage> {
           _lvVisable = false;
         });
       }
-    });
+    });*/
 
     loadData();
   }
@@ -96,7 +96,7 @@ class _ReaderPageState extends State<ReaderPage> {
                 padding: new EdgeInsets.all(10.0),
                 child: Text(
                   html2md.convert(text),
-                  style: Tools.buildStyle(new Color(0xFFF333333), 16),
+                  style: Tools.buildStyleAndSpace(new Color(0xFFF333333), 16, 1.9),
                 )),
             new Divider(
               height: 1.0,
