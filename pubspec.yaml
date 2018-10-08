@@ -7,20 +7,21 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.0
-  english_words: ^3.1.0
-  http: ^0.11.3+16
-  html: ^0.13.3
-  html2md: "^0.1.7"
-  sqflite: "^0.8.8"
-  path_provider: '>=0.3.0'
-  fluttertoast: ^2.0.3
-  flutter_logger: "^0.0.1"
-  event_bus: "^0.4.1"
+  cupertino_icons: any
+  english_words: any
+  http: ^0.12.0
+  html: any
+  html2md: ^0.2.1
+  sqflite: any
+  path_provider: any
+  fluttertoast: any
+  flutter_logger: any
+  event_bus: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 
 # For information on the generic Dart part of this file, see the

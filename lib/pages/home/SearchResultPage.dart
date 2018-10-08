@@ -2,6 +2,7 @@ import 'package:panovel_app/bean/BklistItem.dart';
 import 'package:panovel_app/bean/SearchItem.dart';
 import 'package:panovel_app/common.dart';
 import 'package:panovel_app/pages/BookDetailPage.dart';
+import 'dart:convert';
 
 class SearchResultPage extends StatefulWidget {
   final String words;
@@ -55,17 +56,23 @@ class _SearchResultPageState extends State<SearchResultPage> {
   }
 
   Future loadData() async {
-    var url = Tools.baseurl + "/SearchBook.php?q=$words";
+    var url = "https://sou.xanbhx.com/search?q=" + "$words&t=m&siteid=biquguancom";
+    //https://sou.xanbhx.com/search?q=苍山月&t=m&siteid=biquguancom
+
     var resp = await get(url);
+    print(url);
 
     datas.clear();
+   // Map<String ,dynamic> map = json.decode(resp.body);
     var list = parse(resp.body).querySelectorAll("div.hot_sale");
+   // var list = map["data"];
+
     list.forEach((e) {
       var item = new SearchItem();
-      item.name = e.querySelector("p.title").text;
-      item.author = e.querySelectorAll("p.author")[0].text;
-      item.newName = e.querySelectorAll("p.author")[1].text;
-      item.bookid = e.querySelector("a").attributes["href"].replaceAll("/", "");
+      item.name = e.querySelector("p.title").text;//e["Name"];
+      item.author = e.querySelectorAll("p.author")[0].text;//e["Author"];
+      item.newName = e.querySelectorAll("p.author")[1].text; //e["CName"];
+      item.bookid = e.querySelector("a").attributes["href"].replaceAll("https://m.biquguan.com", "").replaceAll("/", "");//e["Id"];//e.querySelector("a").attributes["href"].replaceAll("/", "");
       datas.add(item);
     });
 

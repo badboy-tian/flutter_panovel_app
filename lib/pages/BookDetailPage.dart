@@ -52,7 +52,12 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   var _chapterID = "";
   void loadingBookDetail() async {
-    var url = Tools.baseurl + "/" + bookid;
+    var url = "";
+    if(bookid.contains("bqg")){
+      url = Tools.baseurl + "/" + bookid;
+    }else{
+      url = Tools.baseurl + "/" + "bqg" + bookid;
+    }
     print(url);
     http.get(url).then((response) {
       var doc = parser.parse(response.body);

@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class Tools{
   static var baseurl = "https://m.biquguan.com";
+  static var souurl = "https://sou.xanbhx.com/search?q=";
   static var lineColor = new Color(0xFFdbdbdb);
 
   static buildSubTitle(int size){
