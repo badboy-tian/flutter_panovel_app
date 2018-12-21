@@ -11,7 +11,6 @@ import 'package:panovel_app/bean/SavedBook.dart';
 import 'package:panovel_app/pages/AllChapterPage.dart';
 import 'package:panovel_app/utils/MyCustomRoute.dart';
 import 'package:panovel_app/utils/Tools.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:panovel_app/common.dart';
 
 /// 阅读界面
@@ -60,18 +59,14 @@ class _ReaderPageState extends State<ReaderPage> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(_title),
-        actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.share), onPressed: () {})
-        ],
+        actions: <Widget>[new IconButton(icon: new Icon(Icons.share), onPressed: () {})],
       ),
       body: buildBody(),
       floatingActionButton: new Opacity(
           opacity: _lvVisable ? 1.0 : 0.0,
           child: new FloatingActionButton(
             onPressed: () {
-              _controller.animateTo(_controller.position.maxScrollExtent,
-                  duration: new Duration(milliseconds: 300),
-                  curve: Curves.easeOut);
+              _controller.animateTo(_controller.position.maxScrollExtent, duration: new Duration(milliseconds: 300), curve: Curves.easeOut);
             },
             child: new Icon(Icons.arrow_downward),
           )),
@@ -114,8 +109,7 @@ class _ReaderPageState extends State<ReaderPage> {
                           loadData();
                         });
                       } else {
-                        Scaffold.of(context).showSnackBar(
-                            new SnackBar(content: new Text("没有上一章了")));
+                        Scaffold.of(context).showSnackBar(new SnackBar(content: new Text("没有上一章了")));
                       }
                     },
                     child: new Text(
@@ -123,11 +117,7 @@ class _ReaderPageState extends State<ReaderPage> {
                     )),
                 new FlatButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          new MyCustomRoute(
-                              builder: (_) =>
-                                  new AllChapterPage(chapter.bookid, "目录")));
+                      Navigator.push(context, new MyCustomRoute(builder: (_) => new AllChapterPage(chapter.bookid, "目录")));
                     },
                     child: new Text("目录")),
                 new FlatButton(
@@ -138,8 +128,7 @@ class _ReaderPageState extends State<ReaderPage> {
                           loadData();
                         });
                       } else {
-                        Scaffold.of(context).showSnackBar(
-                            new SnackBar(content: new Text("没有下一章了")));
+                        Scaffold.of(context).showSnackBar(new SnackBar(content: new Text("没有下一章了")));
                       }
                     },
                     child: new Text("下一章")),
@@ -166,21 +155,23 @@ class _ReaderPageState extends State<ReaderPage> {
     });
     url = "${Tools.baseurl}/${chapter.bookid}/${chapter.chapterid}.html";
     print("loadData: " + url);
+
+    //Dio dio = new Dio();
+    //dio.get("https://www.google.com/").then((resp) {
+
+    // });
+
     http.get(url, headers: Tools.header).then((resp) {
       if (!mounted) return;
-
+      //print(resp.body);
       setState(() {
         var root = parser.parse(resp.body);
         _title = root.querySelector("title").text;
         chapter.name = _title;
         lasturl = root.querySelector("a#pt_prev").attributes["href"];
-        nexturl = root.querySelector("a#pt_next").attributes["href"];
+        nexturl = root.querySelector("a#pb_next").attributes["href"];
         dir = root.querySelector("a#pt_mulu").attributes["href"];
-        text = root
-            .querySelector("div.Readarea")
-            .innerHtml
-            .replaceAll(new RegExp(REGEX_SCRIPT), "")
-            .replaceAll(new RegExp(P_SCRIPT), "");
+        text = root.querySelector("div.Readarea").innerHtml.replaceAll(new RegExp(REGEX_SCRIPT), "").replaceAll(new RegExp(P_SCRIPT), "");
         _loading = false;
       });
       //更新最新阅读的章节
@@ -189,13 +180,13 @@ class _ReaderPageState extends State<ReaderPage> {
         if (old != null) {
           old.lastChapterID = chapter.chapterid;
           old.lastChapterName = chapter.name;
-          value.update(old).then((value){
+          value.update(old).then((value) {
             eventBus.fire("updateNewChapter");
           });
         }
       });
     }).catchError((onError) {
-      Fluttertoast.showToast(msg: "错误:${onError.toString()}");
+      //Fluttertoast.showToast(msg: "错误:${onError.toString()}");
       Navigator.of(context).pop();
       print(onError.toString());
     });

@@ -14,7 +14,6 @@ dependencies:
   html2md: ^0.2.1
   sqflite: any
   path_provider: any
-  fluttertoast: any
   flutter_logger: any
   event_bus: any
 
