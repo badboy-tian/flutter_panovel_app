@@ -5,6 +5,8 @@ PODS:
   - FMDB/standard (2.7.2)
   - path_provider (0.0.1):
     - Flutter
+  - shared_preferences (0.0.1):
+    - Flutter
   - sqflite (0.0.1):
     - Flutter
     - FMDB (~> 2.7.2)
@@ -12,6 +14,7 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `Pods/.symlinks/flutter/ios`)
   - path_provider (from `Pods/.symlinks/plugins/path_provider/ios`)
+  - shared_preferences (from `Pods/.symlinks/plugins/shared_preferences/ios`)
   - sqflite (from `Pods/.symlinks/plugins/sqflite/ios`)
 
 SPEC REPOS:
@@ -23,15 +26,18 @@ EXTERNAL SOURCES:
     :path: Pods/.symlinks/flutter/ios
   path_provider:
     :path: Pods/.symlinks/plugins/path_provider/ios
+  shared_preferences:
+    :path: Pods/.symlinks/plugins/shared_preferences/ios
   sqflite:
     :path: Pods/.symlinks/plugins/sqflite/ios
 
 SPEC CHECKSUMS:
-  Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
   FMDB: 6198a90e7b6900cfc046e6bc0ef6ebb7be9236aa
-  path_provider: 09407919825bfe3c2deae39453b7a5b44f467873
-  sqflite: 801b6b0983f722fa29baf00d1476e4556ada6de4
+  path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
+  shared_preferences: 1feebfa37bb57264736e16865e7ffae7fc99b523
+  sqflite: ff1d9da63c06588cc8d1faf7256d741f16989d5a
 
 PODFILE CHECKSUM: ea0518673586564c605fb6593d385c0e3708ff8d
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.0
