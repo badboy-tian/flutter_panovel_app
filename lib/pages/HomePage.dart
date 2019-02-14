@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:panovel_app/pages/home/HomeRankPage.dart';
 import 'package:panovel_app/pages/home/HomeSubPage.dart';
 import 'package:panovel_app/common.dart';
@@ -56,8 +59,8 @@ class _HomePageState extends State<HomePage>
 
   @override
   void initState() {
-    tabController = new TabController(length: _tabs.length, vsync: this);
     super.initState();
+    tabController = new TabController(length: _tabs.length, vsync: this);
   }
 
   @override
@@ -72,25 +75,26 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return new WillPopScope(
         onWillPop: _requestPop,
-        child: new MaterialApp(
-          title: '欢迎来到flutter',
-          theme: new ThemeData(
-              primaryColor: Colors.green, indicatorColor: Colors.white),
-          home: new Scaffold(
-              appBar: new AppBar(
-                title: isSearch ? buildSearchView() : new Text("抓小说"),
-                bottom: new TabBar(
-                  isScrollable: true,
-                  controller: tabController,
-                  tabs: _tabs,
-                ),
-                actions: buildActions(),
-              ),
-              body: new TabBarView(
-                controller: tabController,
-                children: _tabBarView,
-              )),
-        ));
+        child: DynamicTheme(
+            defaultBrightness: Brightness.light,
+            data: (brightness) => buildTheme(brightness),
+            themedWidgetBuilder: (context, theme) => MaterialApp(
+                  theme: theme,
+                  home: new Scaffold(
+                      appBar: new AppBar(
+                        title: isSearch ? buildSearchView() : new Text("抓小说"),
+                        bottom: new TabBar(
+                          isScrollable: true,
+                          controller: tabController,
+                          tabs: _tabs,
+                        ),
+                        actions: buildActions(),
+                      ),
+                      body: new TabBarView(
+                        controller: tabController,
+                        children: _tabBarView,
+                      )),
+                )));
   }
 
   int preClicked = 0;
@@ -103,13 +107,6 @@ class _HomePageState extends State<HomePage>
       });
       return new Future.value(false);
     }
-
-    /*print("${DateTime.now().millisecond}---${preClicked}");
-    if (DateTime.now().millisecond - preClicked > 2) {
-      Tools.showSnake(context, "再次点击退出");
-      preClicked = DateTime.now().millisecond;
-      return new Future.value(false);
-    }*/
 
     return new Future.value(true);
   }
@@ -128,8 +125,16 @@ class _HomePageState extends State<HomePage>
     }
 
     list.add(new IconButton(
-      icon: new Icon(Icons.share),
-      onPressed: () {},
+      icon: new Icon(
+        Icons.brightness_medium,
+        size: 18,
+      ),
+      onPressed: () {
+        changeBrightness(context);
+        Scaffold.of(context).showSnackBar(new SnackBar(
+          content: new Text("设置成功, 重新打开APP生效"),
+        ));
+      },
     ));
 
     return list;

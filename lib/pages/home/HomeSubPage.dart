@@ -1,3 +1,4 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:panovel_app/bean/BklistItem.dart';
 import 'package:panovel_app/pages/BookDetailPage.dart';
 import 'package:panovel_app/common.dart';
@@ -133,7 +134,7 @@ class _HomeItemState extends State<HomeSubPage> {
                         new Text(
                           item.title,
                           style: new TextStyle(
-                              fontSize: 15.0, color: new Color(0xFF212121)),
+                              fontSize: 15.0, color: DynamicTheme.of(context).brightness == Brightness.dark ? Colors.white70 : new Color(0xFF212121)),
                         )
                       ],
                     ),

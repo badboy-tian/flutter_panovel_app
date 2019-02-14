@@ -18,6 +18,7 @@ class _SavePageState extends State<SavePage> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("追书"),
+        //backgroundColor: currentColor,
       ),
       body: buildBody(),
     );
@@ -124,7 +125,7 @@ class _SavePageState extends State<SavePage> {
                     children: <Widget>[
                       new Row(
                         children: <Widget>[
-                          new Text(book.name, style: Tools.buildTitle(14))
+                          new Text(book.name, style: Tools.buildTitle(14, context))
                         ],
                       ),
                       new Row(

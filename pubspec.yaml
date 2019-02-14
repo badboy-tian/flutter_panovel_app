@@ -16,6 +16,9 @@ dependencies:
   path_provider: any
   flutter_logger: any
   event_bus: any
+  font_awesome_flutter: any
+  shared_preferences: ^0.5.1+1
+  dynamic_theme: any
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -16,8 +17,8 @@ class Tools{
     return new TextStyle(color: new Color(0xFF757575), fontSize: size.toDouble());
   }
 
-  static buildTitle(int size){
-    return new TextStyle(color: Colors.black87, fontSize: size.toDouble());
+  static buildTitle(int size, context){
+    return new TextStyle(color: DynamicTheme.of(context).brightness == Brightness.dark ? Colors.white70 : Colors.black87, fontSize: size.toDouble());
   }
 
   static buildStyle(Color color, int size){

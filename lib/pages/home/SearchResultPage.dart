@@ -31,10 +31,11 @@ class _SearchResultPageState extends State<SearchResultPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+        //backgroundColor: currentColor,
         title: new Text("\"$words\"搜索结果",
             style: Tools.buildStyle(Colors.white, 17)),
       ),
-      body: buildBody(),
+      body: buildBody()
     );
   }
 
@@ -121,7 +122,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                   new Expanded(
                       child: new Text(
                     item.name.trim(),
-                    style: Tools.buildTitle(14),
+                    style: Tools.buildTitle(14, context),
                   ))
                 ],
               ),

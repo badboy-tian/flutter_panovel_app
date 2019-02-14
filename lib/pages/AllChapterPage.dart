@@ -6,6 +6,7 @@ import 'package:panovel_app/bean/Chapter.dart';
 import 'package:panovel_app/pages/ReaderPage.dart';
 import 'package:panovel_app/utils/MyCustomRoute.dart';
 import 'package:panovel_app/utils/Tools.dart';
+import 'package:panovel_app/common.dart';
 
 class AllChapterPage extends StatefulWidget {
   final String name;
@@ -35,6 +36,7 @@ class _AllChapterPageState extends State<AllChapterPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+        //backgroundColor: currentColor,
         title: new Text(_title),
         actions: <Widget>[
           new IconButton(icon: Icon(Icons.share), onPressed: () {})

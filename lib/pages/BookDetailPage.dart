@@ -137,6 +137,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         child: new Scaffold(
           key: key,
           appBar: new AppBar(
+           // backgroundColor: currentColor,
             title: new Text("${_bkDetail.name}"),
             actions: <Widget>[
               new IconButton(
@@ -224,7 +225,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 new Text("作者：" + _bkDetail.author,
-                                    style: Tools.buildTitle(16)),
+                                    style: Tools.buildTitle(16, context)),
                                 new Text("类别：" + _bkDetail.type,
                                     style: Tools.buildSubTitle(13)),
                                 new Text("状态：" + _bkDetail.state,
