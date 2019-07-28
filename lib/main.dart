@@ -4,20 +4,12 @@ import 'package:panovel_app/pages/HomePage.dart';
 import 'package:panovel_app/pages/MePage.dart';
 import 'package:panovel_app/pages/SavePage.dart';
 import 'package:panovel_app/common.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future main() async {
-  Brightness brightness;
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  brightness = Brightness.dark;
-  (prefs.getBool("isDark") ?? false) ? Brightness.dark : Brightness.light;
-  runApp(new MyApp(brightness));
+  runApp(new MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  Brightness brightness;
-
-  MyApp(this.brightness);
 
   @override
   Widget build(BuildContext context) {

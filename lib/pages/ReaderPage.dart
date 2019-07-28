@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:logging/logging.dart';
 import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
 import 'package:html2md/html2md.dart' as html2md;
@@ -47,16 +46,17 @@ class _ReaderPageState extends State<ReaderPage> {
     print(chapter.chapterid);
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(_title, style: TextStyle(color: DynamicTheme.of(context).brightness == Brightness.dark ? Colors.white70 : Colors.black87),),
+        title: new Text(
+          _title,
+          style: TextStyle(color: DynamicTheme.of(context).brightness == Brightness.dark ? Colors.white70 : Colors.black87),
+        ),
       ),
       body: buildBody(),
       floatingActionButton: new Opacity(
           opacity: _lvVisable ? 1.0 : 0.0,
           child: new FloatingActionButton(
             onPressed: () {
-              _controller.animateTo(_controller.position.maxScrollExtent,
-                  duration: new Duration(milliseconds: 300),
-                  curve: Curves.easeOut);
+              _controller.animateTo(_controller.position.maxScrollExtent, duration: new Duration(milliseconds: 300), curve: Curves.easeOut);
             },
             child: new Icon(Icons.arrow_downward),
           )),
@@ -99,8 +99,7 @@ class _ReaderPageState extends State<ReaderPage> {
                           loadData();
                         });
                       } else {
-                        Scaffold.of(context).showSnackBar(
-                            new SnackBar(content: new Text("没有上一章了")));
+                        Scaffold.of(context).showSnackBar(new SnackBar(content: new Text("没有上一章了")));
                       }
                     },
                     child: new Text(
@@ -108,11 +107,7 @@ class _ReaderPageState extends State<ReaderPage> {
                     )),
                 new FlatButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          new MyCustomRoute(
-                              builder: (_) =>
-                                  new AllChapterPage(chapter.bookid, "目录")));
+                      Navigator.push(context, new MyCustomRoute(builder: (_) => new AllChapterPage(chapter.bookid, "目录")));
                     },
                     child: new Text("目录")),
                 new FlatButton(
@@ -123,8 +118,7 @@ class _ReaderPageState extends State<ReaderPage> {
                           loadData();
                         });
                       } else {
-                        Scaffold.of(context).showSnackBar(
-                            new SnackBar(content: new Text("没有下一章了")));
+                        Scaffold.of(context).showSnackBar(new SnackBar(content: new Text("没有下一章了")));
                       }
                     },
                     child: new Text("下一章")),
@@ -142,7 +136,8 @@ class _ReaderPageState extends State<ReaderPage> {
   var P_SCRIPT = "<p[^>]*?>[\\s\\S]*?<\\/p>";
   var lasturl = "";
   var nexturl = "";
-  var dir = "";
+
+  //var dir = "";
   var url = "";
 
   void loadData() async {
@@ -164,14 +159,16 @@ class _ReaderPageState extends State<ReaderPage> {
         var root = parser.parse(resp.body);
         _title = root.querySelector("title").text;
         chapter.name = _title;
-        lasturl = root.querySelector("a#pt_prev").attributes["href"];
-        nexturl = root.querySelector("a#pb_next").attributes["href"];
-        dir = root.querySelector("a#pt_mulu").attributes["href"];
-        text = root
-            .querySelector("div.Readarea")
-            .innerHtml
-            .replaceAll(new RegExp(REGEX_SCRIPT), "")
-            .replaceAll(new RegExp(P_SCRIPT), "");
+
+        try {
+          lasturl = root.querySelector("a#pb_prev").attributes['href'];
+          nexturl = root.querySelector("a#pb_next").attributes["href"];
+        } catch (error) {
+          print(error);
+        }
+
+        //dir = root.querySelector("a#pt_mulu").attributes["href"];
+        text = root.querySelector("div.Readarea").innerHtml.replaceAll(new RegExp(REGEX_SCRIPT), "").replaceAll(new RegExp(P_SCRIPT), "");
         _loading = false;
       });
       //更新最新阅读的章节
